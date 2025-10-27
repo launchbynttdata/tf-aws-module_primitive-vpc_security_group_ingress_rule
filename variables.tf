@@ -106,3 +106,9 @@ variable "description" {
     error_message = "The description must be 255 characters or less."
   }
 }
+
+variable "tags" {
+  description = "A map of tags to assign to the ingress rule."
+  type        = map(string)
+  default     = {}
+}

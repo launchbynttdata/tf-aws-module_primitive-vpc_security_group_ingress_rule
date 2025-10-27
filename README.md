@@ -253,6 +253,7 @@ No modules.
 | <a name="input_prefix_list_id"></a> [prefix\_list\_id](#input\_prefix\_list\_id) | The ID of the prefix list for the source of this ingress rule. Mutually exclusive with cidr\_ipv4, cidr\_ipv6, and referenced\_security\_group\_id. | `string` | `null` | no |
 | <a name="input_referenced_security_group_id"></a> [referenced\_security\_group\_id](#input\_referenced\_security\_group\_id) | The ID of the source security group for this ingress rule. Mutually exclusive with cidr\_ipv4, cidr\_ipv6, and prefix\_list\_id. | `string` | `null` | no |
 | <a name="input_description"></a> [description](#input\_description) | The description of this ingress rule. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to the ingress rule. | `map(string)` | `{}` | no |
 
 ## Outputs
 

@@ -22,4 +22,5 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   referenced_security_group_id = var.referenced_security_group_id
 
   description = var.description
+  tags        = local.tags
 }

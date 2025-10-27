@@ -39,6 +39,13 @@ locals {
     var.referenced_security_group_id != null ? "security_group:${var.referenced_security_group_id}" :
     "none"
   )
+
+  tags = merge(
+    {
+      "ManagedBy" = "tf-aws-module_primitive-vpc_security_group_ingress_rule"
+    },
+    var.tags,
+  )
 }
 
 # Validation checks using checks block (Terraform 1.5+)
