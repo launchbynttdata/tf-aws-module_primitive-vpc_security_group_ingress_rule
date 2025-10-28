@@ -34,22 +34,12 @@ variable "from_port" {
   description = "The start of port range for the TCP and UDP protocols, or an ICMP type number. Required for tcp and udp protocols. Use -1 for ICMP type."
   type        = number
   default     = null
-
-  validation {
-    condition     = var.from_port == null || (var.from_port >= -1 && var.from_port <= 65535)
-    error_message = "The from_port must be between -1 and 65535."
-  }
 }
 
 variable "to_port" {
   description = "The end of port range for the TCP and UDP protocols, or an ICMP code. Required for tcp and udp protocols. Use -1 for ICMP code."
   type        = number
   default     = null
-
-  validation {
-    condition     = var.to_port == null || (var.to_port >= -1 && var.to_port <= 65535)
-    error_message = "The to_port must be between -1 and 65535."
-  }
 }
 
 variable "cidr_ipv4" {

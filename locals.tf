@@ -28,9 +28,6 @@ locals {
   # Validation: Check that TCP/UDP have required ports
   validate_ports_for_protocol = !local.protocol_requires_ports || (var.from_port != null && var.to_port != null)
 
-  # Validation: Check port range is valid
-  validate_port_range = var.from_port == null || var.to_port == null || var.from_port <= var.to_port
-
   # Determine effective source for output
   effective_source = (
     var.cidr_ipv4 != null ? "cidr_ipv4:${var.cidr_ipv4}" :
@@ -40,12 +37,11 @@ locals {
     "none"
   )
 
-  tags = merge(
-    {
-      "ManagedBy" = "tf-aws-module_primitive-vpc_security_group_ingress_rule"
-    },
-    var.tags,
-  )
+  default_tags = {
+    provisioner = "Terraform"
+  }
+
+  tags = merge(local.default_tags, var.tags)
 }
 
 # Validation checks using checks block (Terraform 1.5+)
@@ -60,12 +56,5 @@ check "ports_validation" {
   assert {
     condition     = local.validate_ports_for_protocol
     error_message = "The from_port and to_port must be specified for TCP and UDP protocols."
-  }
-}
-
-check "port_range_validation" {
-  assert {
-    condition     = local.validate_port_range
-    error_message = "The from_port must be less than or equal to to_port."
   }
 }
