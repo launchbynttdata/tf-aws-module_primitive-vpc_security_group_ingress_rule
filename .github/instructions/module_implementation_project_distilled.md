@@ -12,7 +12,7 @@ This guide provides the framework, conventions, and best practices for implement
 - Lives at the **repository root** (not in a subdirectory)
 - Provides sensible defaults and lightweight validation
 - Exposes resource functionality for composition in higher-level modules
-- Follows the **reference framework** from [`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)
+- Follows the **reference implementation** from [`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)
 
 ## 2. Module Structure & Conventions
 
@@ -29,7 +29,6 @@ repo-root/
 ├── .gitignore                  # Standard gitignore
 ├── .tool-versions              # Tool version specifications
 ├── Makefile                    # Authoritative build/test tool
-├── .pre-commit-config.yaml     # Pre-commit hooks configuration
 ├── .github/
 │   └── workflows/              # CI/CD workflows
 ├── examples/
@@ -209,6 +208,7 @@ Create **at least 3-4 examples** demonstrating different use cases:
 2. **minimal** - Absolute minimum required inputs
 3. **simple** - Basic working example (used by integration tests)
 4. **[feature-specific]** - Examples for each major feature/use case
+5. **modular** - When available, examples should implement [public primitive modules](https://github.com/launchbynttdata?q=tf-aws-module_primitive&type=public&language=&sort=) available on Launch's github.
 
 ### 5.2 Example Structure
 
