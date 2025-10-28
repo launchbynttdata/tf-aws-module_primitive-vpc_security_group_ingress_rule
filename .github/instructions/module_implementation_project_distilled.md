@@ -10,10 +10,15 @@ This guide provides the framework, conventions, and best practices for implement
 
 **Before writing any code, you MUST:**
 
-1. Copy three essential files: `Makefile`, `.tool-versions`, `.gitignore`
+> Reference Implementation: [`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)
+
+1. Copy three essential files EXACTLY: `Makefile`, `.tool-versions`, `.gitignore`
 2. Run `make configure` to bootstrap the environment
 3. Run `pre-commit install` to enable quality gates
-4. Copy remaining framework files (`.github/`, `tests/`)
+4. Copy `.github/*` directory EXACTLY (all workflows and configurations)
+5. Copy `tests/*` directory EXACTLY (entire test framework structure)
+
+**These are MANDATORY, not optional. Copy them exactly as-is from the reference repository.**
 
 **Only after framework setup is complete should you begin writing module code.**
 
@@ -235,6 +240,30 @@ examples/complete/
 └── README.md            # Example-specific documentation
 ```
 
+**⚠️ IMPORTANT: Do NOT include provider blocks in examples**
+
+Examples should **not** contain `provider` blocks. The test framework will create and configure the provider automatically.
+
+```hcl
+# ❌ INCORRECT - Do not include this in examples
+provider "aws" {
+  region = "us-east-1"
+}
+
+# ✅ CORRECT - Examples contain only module usage and resources
+module "example" {
+  source = "../.."
+  # module configuration
+}
+```
+
+**Why?**
+
+- Test framework manages provider configuration
+- Enables testing across multiple regions/accounts
+- Prevents provider configuration conflicts
+- Maintains consistency across all examples
+
 ### 5.3 Output Normalization
 
 **All examples MUST use these standardized output names:**
@@ -452,17 +481,21 @@ pre-commit run terraform_docs -a
 
 ### 9.1 Initial Setup (CRITICAL: Do This First)
 
-**⚠️ IMPORTANT: Copy framework files and bootstrap the environment BEFORE any coding begins.**
+**⚠️ MANDATORY: Copy framework files and bootstrap the environment BEFORE any coding begins.**
 
-#### Step 1: Copy Essential Framework Files
+**All framework files must be copied EXACTLY as-is from the reference repository. Do not modify, skip, or customize them during setup.**
 
-Copy these three critical files from the reference repository ([`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)):
+Reference repository: [`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)
+
+#### Step 1: Copy Essential Framework Files (EXACT COPY REQUIRED)
+
+Copy these three critical files **exactly as-is** from the reference repository:
 
 ```bash
 # 1. Navigate to your new module repository
 cd /path/to/new-module-repo
 
-# 2. Copy the three essential framework files
+# 2. Copy the three essential framework files EXACTLY
 cp /path/to/reference-repo/Makefile .
 cp /path/to/reference-repo/.tool-versions .
 cp /path/to/reference-repo/.gitignore .
@@ -473,6 +506,8 @@ cp /path/to/reference-repo/.gitignore .
 - **Makefile**: Authoritative build/test tool with all quality gates and commands
 - **.tool-versions**: Pins exact tool versions (Terraform, Go, etc.) for consistency
 - **.gitignore**: Standard ignore patterns for Terraform projects
+
+**DO NOT modify these files during setup. Copy them exactly.**
 
 #### Step 2: Bootstrap the Environment
 
@@ -493,19 +528,76 @@ pre-commit install
 - Ensures all required tools are available
 - Prepares the repository for development
 
-#### Step 3: Copy Additional Framework Files
+#### Step 3: Copy GitHub Workflows (EXACT COPY REQUIRED)
 
-After bootstrapping, copy the remaining framework files:
+**MANDATORY: Copy the entire `.github/` directory exactly as-is:**
 
 ```bash
-# 5. Copy GitHub workflows
+# 5. Copy GitHub workflows and configurations EXACTLY
 cp -r /path/to/reference-repo/.github .
+```
 
-# 6. Copy test framework structure (adapt later)
+**What's included in `.github/`:**
+
+- `workflows/pre-commit.yaml` - Pre-commit quality gates CI
+- `workflows/tests.yaml` - Integration test automation
+- Other workflow configurations
+
+**DO NOT:**
+
+- Skip any workflow files
+- Modify workflows during setup
+- Create custom workflows before copying the framework
+
+**You may make minimal adjustments AFTER setup:**
+
+- Update module name references
+- Adjust paths if absolutely necessary
+- Keep all quality gates intact
+
+#### Step 4: Copy Test Framework (EXACT COPY REQUIRED)
+
+**MANDATORY: Copy the entire `tests/` directory structure exactly as-is:**
+
+```bash
+# 6. Copy test framework structure EXACTLY
 cp -r /path/to/reference-repo/tests .
 ```
 
-**⚠️ DO NOT START CODING until Steps 1-3 are complete.**
+**What's included in `tests/`:**
+
+- `post_deploy_functional/` - Functional tests after deployment
+- `post_deploy_functional_readonly/` - Read-only validation tests
+- `testimpl/` - Test implementation utilities
+- Go module files (`go.mod`, `go.sum`)
+- Test execution scripts
+
+**DO NOT:**
+
+- Skip any test directories
+- Modify test structure during setup
+- Create custom test patterns before copying the framework
+
+**You MUST adapt tests AFTER copying:**
+
+1. Copy the framework exactly first
+2. Update Go module imports to match your module
+3. Modify test assertions to validate your specific resource
+4. Keep the test structure and patterns intact
+
+#### Step 5: Verify Framework Setup
+
+```bash
+# 7. Verify framework setup (may have failures until module is implemented)
+make check
+```
+
+**Expected at this stage:**
+- Tools are available and functional
+- Pre-commit hooks are installed
+- Make targets execute (may fail validation until code exists)
+
+**⚠️ DO NOT START CODING until Steps 1-4 are complete.**
 
 ### 9.2 Implementation Order
 
@@ -513,9 +605,42 @@ cp -r /path/to/reference-repo/tests .
 
 1. **Core module files** (versions.tf, variables.tf, main.tf, outputs.tf, locals.tf)
 2. **Examples** (minimal, complete, simple, feature-specific)
-3. **Tests** (adapt from reference repo test framework)
+3. **Test adaptation** (modify copied test framework for your resource)
 4. **Documentation** (README.md, update with terraform-docs)
 5. **Validation** (run make check, fix issues)
+
+#### Test Framework Adaptation
+
+After copying the test framework exactly in Step 4 of Initial Setup, adapt it for your module:
+
+1. **Update Go module name** in `tests/go.mod`:
+
+   ```go
+   module github.com/launchbynttdata/tf-aws-module_primitive-[your-resource]
+   ```
+
+2. **Update test imports** to reference your module path
+
+3. **Modify test assertions** in `testimpl/test_impl.go`:
+   - Change resource type checks (e.g., `ec2.DescribeSecurityGroupRules`)
+   - Update validation logic for your specific resource attributes
+   - Keep test structure and patterns intact
+   - Make tests generic (don't hardcode expected values)
+
+4. **Update test configurations** in each example's `test.tfvars`
+
+5. **Run tests** to verify functionality:
+
+   ```bash
+   make tfmodule/test/integration
+   ```
+
+**DO NOT:**
+
+- Change test directory structure
+- Remove test categories (functional, readonly)
+- Skip test implementation
+- Create custom test patterns outside the framework
 
 ### 9.3 Quality Gates
 
@@ -595,7 +720,22 @@ output "effective_value" {
 
 ## 11. Lessons Learned & Best Practices
 
-### 11.1 Validation Precision
+### 11.1 Framework Files Must Be Copied Exactly
+
+**Lesson:** Skipping, modifying, or customizing framework files during setup causes inconsistencies, broken tooling, and failed CI/CD.
+
+**Solution:** Copy ALL framework files exactly as-is from the reference repository BEFORE any development:
+
+- `Makefile`, `.tool-versions`, `.gitignore` (exact copies)
+- `.github/*` entire directory (exact copy)
+- `tests/*` entire directory structure (exact copy)
+
+**Only adapt AFTER copying:**
+
+- Tests: Update Go imports and assertions for your resource
+- Workflows: Minimal adjustments for module name references only
+
+### 11.2 Validation Precision
 
 **Lesson:** Imprecise validations cause false positives and user frustration.
 
@@ -603,7 +743,7 @@ output "effective_value" {
 
 **Example:** Port validation varies by protocol (TCP: 1-65535, ICMP: -1, all: -1). Without protocol context, validation will be wrong.
 
-### 11.2 Test Flexibility
+### 11.3 Test Flexibility
 
 **Lesson:** Hardcoded test expectations break when examples use different valid configurations.
 
@@ -611,25 +751,37 @@ output "effective_value" {
 
 **Example:** Test that a source exists, not that it's specifically an IPv4 CIDR.
 
-### 11.3 Output Normalization
+### 11.4 Output Normalization
 
 **Lesson:** Each example using different output names requires unique test code.
 
 **Solution:** Standardize core output names across all examples. Example-specific outputs are fine as additions.
 
-### 11.4 Security by Default
+### 11.5 Security by Default
 
 **Lesson:** Examples with default security groups trigger security scanners.
 
 **Solution:** Always configure default security groups to deny all traffic in examples.
 
-### 11.5 Framework Adherence
+### 11.6 No Provider Blocks in Examples
+
+**Lesson:** Including provider blocks in examples causes conflicts with test framework and limits flexibility.
+
+**Solution:** Never include `provider` blocks in example code. The test framework manages provider configuration automatically.
+
+**Benefits:**
+- Test framework controls region/account selection
+- Enables multi-region testing
+- Prevents provider configuration conflicts
+- Maintains consistency across examples
+
+### 11.7 Framework Adherence
 
 **Lesson:** Custom approaches create maintenance burden and inconsistency.
 
 **Solution:** Follow the reference framework exactly. Copy files as-is, make minimal adjustments.
 
-### 11.6 Check Blocks vs Preconditions
+### 11.8 Check Blocks vs Preconditions
 
 **Lesson:** Preconditions fail entire operations, preventing valid use cases.
 
@@ -663,13 +815,16 @@ Use this checklist to verify implementation completeness:
 
 ### Framework Setup (MUST BE FIRST)
 
-- [ ] Copied Makefile from reference repo
-- [ ] Copied .tool-versions from reference repo
-- [ ] Copied .gitignore from reference repo
+- [ ] Copied Makefile EXACTLY from reference repo (no modifications)
+- [ ] Copied .tool-versions EXACTLY from reference repo (no modifications)
+- [ ] Copied .gitignore EXACTLY from reference repo (no modifications)
 - [ ] Ran `make configure` successfully
 - [ ] Ran `pre-commit install` successfully
-- [ ] Copied .github/ directory from reference repo
-- [ ] Copied tests/ directory structure from reference repo
+- [ ] Copied .github/ directory EXACTLY from reference repo (entire directory)
+- [ ] Verified all GitHub workflow files present (pre-commit.yaml, tests.yaml, etc.)
+- [ ] Copied tests/ directory EXACTLY from reference repo (entire directory structure)
+- [ ] Verified all test subdirectories present (post_deploy_functional/, post_deploy_functional_readonly/, testimpl/)
+- [ ] Adapted tests AFTER copying (updated Go imports, assertions, kept structure intact)
 
 ### Core Module
 
@@ -688,6 +843,7 @@ Use this checklist to verify implementation completeness:
 - [ ] Normalized output names across examples
 - [ ] Each example has terraform.tfvars.sample
 - [ ] Each example has test.tfvars for integration tests
+- [ ] NO examples contain provider blocks (test framework manages providers)
 - [ ] All examples creating VPCs configure default security group
 - [ ] All examples run successfully (init/plan/apply/destroy)
 
@@ -726,15 +882,15 @@ Use this checklist to verify implementation completeness:
 ## 14. Quick Start Template
 
 ```bash
-# PHASE 1: Framework Setup (DO THIS FIRST)
-# ==========================================
+# PHASE 1: Framework Setup (MANDATORY - DO THIS FIRST)
+# =====================================================
 
-# 1. Create new repository for the primitive module
+# 1. Create new repository for the primitive module, if not already done
 mkdir tf-aws-module_primitive-[resource_type]
 cd tf-aws-module_primitive-[resource_type]
 git init
 
-# 2. Copy the three essential framework files from reference repo
+# 2. Copy the three essential framework files EXACTLY (no modifications)
 cp /path/to/tf-aws-module_primitive-iam_role/Makefile .
 cp /path/to/tf-aws-module_primitive-iam_role/.tool-versions .
 cp /path/to/tf-aws-module_primitive-iam_role/.gitignore .
@@ -745,17 +901,34 @@ make configure
 # 4. Install pre-commit hooks
 pre-commit install
 
-# 5. Copy remaining framework files
+# 5. Copy GitHub workflows EXACTLY (entire directory, no modifications)
 cp -r /path/to/tf-aws-module_primitive-iam_role/.github .
+
+# 6. Copy test framework EXACTLY (entire directory structure, no modifications)
 cp -r /path/to/tf-aws-module_primitive-iam_role/tests .
 
-# 6. Verify framework setup
-make check  # May fail initially, but tools should be available
+# 7. Verify framework setup (tools should be functional)
+make check  # May fail validation until module code exists
 
-# PHASE 2: Core Module Implementation (ONLY AFTER PHASE 1)
-# =========================================================
+# PHASE 2: Core Module Implementation (ONLY AFTER PHASE 1 COMPLETE)
+# ==================================================================
 
-# 7. Create core module files with canonical patterns
+# 8. Create core module files with canonical patterns
+# See templates below
+
+# 9. Implement examples (minimal, complete, simple, etc.)
+
+# 10. Adapt test framework (AFTER copying exactly):
+#    - Update Go module name in tests/go.mod
+#    - Update test imports
+#    - Modify assertions for your resource type
+#    - Keep structure and patterns intact
+
+# 11. Generate documentation
+make check  # Now should pass all gates
+
+# 12. Run integration tests
+make tfmodule/test/integration
 ```
 
 Core file templates:
