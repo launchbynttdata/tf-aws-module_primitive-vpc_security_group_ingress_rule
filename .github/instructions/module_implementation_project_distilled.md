@@ -6,6 +6,19 @@
 
 This guide provides the framework, conventions, and best practices for implementing **Terraform primitive modules** at Launch. A primitive module manages a **single AWS resource** and follows strict conventions for structure, testing, and documentation.
 
+### ⚠️ CRITICAL: Framework Setup Must Be First
+
+**Before writing any code, you MUST:**
+
+1. Copy three essential files: `Makefile`, `.tool-versions`, `.gitignore`
+2. Run `make configure` to bootstrap the environment
+3. Run `pre-commit install` to enable quality gates
+4. Copy remaining framework files (`.github/`, `tests/`)
+
+**Only after framework setup is complete should you begin writing module code.**
+
+See [Section 9.1 Initial Setup](#91-initial-setup-critical-do-this-first) for detailed instructions.
+
 ### What is a Primitive Module?
 
 - Wraps **one AWS resource** (e.g., `aws_vpc_security_group_ingress_rule`, `aws_iam_role`)
@@ -437,29 +450,70 @@ pre-commit run terraform_docs -a
 
 ## 9. Development Workflow
 
-### 9.1 Initial Setup
+### 9.1 Initial Setup (CRITICAL: Do This First)
+
+**⚠️ IMPORTANT: Copy framework files and bootstrap the environment BEFORE any coding begins.**
+
+#### Step 1: Copy Essential Framework Files
+
+Copy these three critical files from the reference repository ([`tf-aws-module_primitive-iam_role`](https://github.com/launchbynttdata/tf-aws-module_primitive-iam_role)):
 
 ```bash
-# 1. Clone reference repository framework
-git clone [reference-repo] reference-repo
-cd reference-repo
+# 1. Navigate to your new module repository
+cd /path/to/new-module-repo
 
-# 2. Copy framework files to new module repo
-cp Makefile [new-repo]/
-cp -r .github [new-repo]/
-# ... copy other framework files
+# 2. Copy the three essential framework files
+cp /path/to/reference-repo/Makefile .
+cp /path/to/reference-repo/.tool-versions .
+cp /path/to/reference-repo/.gitignore .
+```
 
-# 3. Configure new module
-cd [new-repo]
-make configure    # pre-commit configuration will be deployed with this step
+**Why these files are essential:**
+
+- **Makefile**: Authoritative build/test tool with all quality gates and commands
+- **.tool-versions**: Pins exact tool versions (Terraform, Go, etc.) for consistency
+- **.gitignore**: Standard ignore patterns for Terraform projects
+
+#### Step 2: Bootstrap the Environment
+
+After copying the framework files, run `make configure` to bootstrap all remaining files:
+
+```bash
+# 3. Bootstrap the environment (generates .pre-commit-config.yaml and other configs)
+make configure
+
+# 4. Install pre-commit hooks
 pre-commit install
 ```
 
+**What `make configure` does:**
+
+- Generates `.pre-commit-config.yaml` with all quality gates
+- Sets up local development environment
+- Ensures all required tools are available
+- Prepares the repository for development
+
+#### Step 3: Copy Additional Framework Files
+
+After bootstrapping, copy the remaining framework files:
+
+```bash
+# 5. Copy GitHub workflows
+cp -r /path/to/reference-repo/.github .
+
+# 6. Copy test framework structure (adapt later)
+cp -r /path/to/reference-repo/tests .
+```
+
+**⚠️ DO NOT START CODING until Steps 1-3 are complete.**
+
 ### 9.2 Implementation Order
+
+**After framework setup is complete, implement in this order:**
 
 1. **Core module files** (versions.tf, variables.tf, main.tf, outputs.tf, locals.tf)
 2. **Examples** (minimal, complete, simple, feature-specific)
-3. **Tests** (adapt from reference repo)
+3. **Tests** (adapt from reference repo test framework)
 4. **Documentation** (README.md, update with terraform-docs)
 5. **Validation** (run make check, fix issues)
 
@@ -607,6 +661,16 @@ output "effective_value" {
 
 Use this checklist to verify implementation completeness:
 
+### Framework Setup (MUST BE FIRST)
+
+- [ ] Copied Makefile from reference repo
+- [ ] Copied .tool-versions from reference repo
+- [ ] Copied .gitignore from reference repo
+- [ ] Ran `make configure` successfully
+- [ ] Ran `pre-commit install` successfully
+- [ ] Copied .github/ directory from reference repo
+- [ ] Copied tests/ directory structure from reference repo
+
 ### Core Module
 
 - [ ] All core files present (main.tf, variables.tf, outputs.tf, locals.tf, versions.tf)
@@ -662,11 +726,43 @@ Use this checklist to verify implementation completeness:
 ## 14. Quick Start Template
 
 ```bash
-# 1. Create new repository
-# 2. Copy framework files from reference repo
-# 3. Create core module files
+# PHASE 1: Framework Setup (DO THIS FIRST)
+# ==========================================
 
-# versions.tf
+# 1. Create new repository for the primitive module
+mkdir tf-aws-module_primitive-[resource_type]
+cd tf-aws-module_primitive-[resource_type]
+git init
+
+# 2. Copy the three essential framework files from reference repo
+cp /path/to/tf-aws-module_primitive-iam_role/Makefile .
+cp /path/to/tf-aws-module_primitive-iam_role/.tool-versions .
+cp /path/to/tf-aws-module_primitive-iam_role/.gitignore .
+
+# 3. Bootstrap environment (generates .pre-commit-config.yaml and other configs)
+make configure
+
+# 4. Install pre-commit hooks
+pre-commit install
+
+# 5. Copy remaining framework files
+cp -r /path/to/tf-aws-module_primitive-iam_role/.github .
+cp -r /path/to/tf-aws-module_primitive-iam_role/tests .
+
+# 6. Verify framework setup
+make check  # May fail initially, but tools should be available
+
+# PHASE 2: Core Module Implementation (ONLY AFTER PHASE 1)
+# =========================================================
+
+# 7. Create core module files with canonical patterns
+```
+
+Core file templates:
+
+**versions.tf**
+
+```hcl
 terraform {
   required_version = "~> 1.5"
   required_providers {
@@ -676,8 +772,11 @@ terraform {
     }
   }
 }
+```
 
-# variables.tf
+**variables.tf**
+
+```hcl
 variable "required_arg" {
   description = "Required argument"
   type        = string
@@ -688,16 +787,22 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+```
 
-# locals.tf
+**locals.tf**
+
+```hcl
 locals {
   default_tags = {
     provisioner = "Terraform"
   }
   tags = merge(local.default_tags, var.tags)
 }
+```
 
-# main.tf
+**main.tf**
+
+```hcl
 resource "aws_example" "this" {
   required_arg = var.required_arg
   tags         = local.tags
