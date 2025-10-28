@@ -208,7 +208,7 @@ Create **at least 3-4 examples** demonstrating different use cases:
 2. **minimal** - Absolute minimum required inputs
 3. **simple** - Basic working example (used by integration tests)
 4. **[feature-specific]** - Examples for each major feature/use case
-5. **modular** - When available, examples should implement [public primitive modules](https://github.com/launchbynttdata?q=tf-aws-module_primitive&type=public&language=&sort=) available on Launch's github.
+5. **modular** - When available, examples should implement [public primitive modules](https://github.com/orgs/launchbynttdata/repositories?language=&q=tf-aws-module_primitive&sort=&type=public) available on Launch's github.
 
 ### 5.2 Example Structure
 
