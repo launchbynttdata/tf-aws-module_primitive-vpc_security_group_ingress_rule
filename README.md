@@ -224,12 +224,6 @@ Maintained by [Launch by NTT DATA](https://github.com/launchbynttdata).
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.100 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
-
 ## Modules
 
 No modules.
@@ -244,25 +238,25 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | The ID of the security group to which this ingress rule will be attached. | `string` | n/a | yes |
-| <a name="input_ip_protocol"></a> [ip\_protocol](#input\_ip\_protocol) | The IP protocol name or number. Use '-1' to specify all protocols. Protocol numbers: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml | `string` | n/a | yes |
-| <a name="input_from_port"></a> [from\_port](#input\_from\_port) | The start of port range for the TCP and UDP protocols, or an ICMP type number. Required for tcp and udp protocols. Use -1 for ICMP type. | `number` | `null` | no |
-| <a name="input_to_port"></a> [to\_port](#input\_to\_port) | The end of port range for the TCP and UDP protocols, or an ICMP code. Required for tcp and udp protocols. Use -1 for ICMP code. | `number` | `null` | no |
 | <a name="input_cidr_ipv4"></a> [cidr\_ipv4](#input\_cidr\_ipv4) | The source IPv4 CIDR range for this ingress rule. Mutually exclusive with cidr\_ipv6, prefix\_list\_id, and referenced\_security\_group\_id. | `string` | `null` | no |
 | <a name="input_cidr_ipv6"></a> [cidr\_ipv6](#input\_cidr\_ipv6) | The source IPv6 CIDR range for this ingress rule. Mutually exclusive with cidr\_ipv4, prefix\_list\_id, and referenced\_security\_group\_id. | `string` | `null` | no |
+| <a name="input_description"></a> [description](#input\_description) | The description of this ingress rule. | `string` | `null` | no |
+| <a name="input_from_port"></a> [from\_port](#input\_from\_port) | The start of port range for the TCP and UDP protocols, or an ICMP type number. Required for tcp and udp protocols. Use -1 for ICMP type. | `number` | `null` | no |
+| <a name="input_ip_protocol"></a> [ip\_protocol](#input\_ip\_protocol) | The IP protocol name or number. Use '-1' to specify all protocols. Protocol numbers: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml | `string` | n/a | yes |
 | <a name="input_prefix_list_id"></a> [prefix\_list\_id](#input\_prefix\_list\_id) | The ID of the prefix list for the source of this ingress rule. Mutually exclusive with cidr\_ipv4, cidr\_ipv6, and referenced\_security\_group\_id. | `string` | `null` | no |
 | <a name="input_referenced_security_group_id"></a> [referenced\_security\_group\_id](#input\_referenced\_security\_group\_id) | The ID of the source security group for this ingress rule. Mutually exclusive with cidr\_ipv4, cidr\_ipv6, and prefix\_list\_id. | `string` | `null` | no |
-| <a name="input_description"></a> [description](#input\_description) | The description of this ingress rule. | `string` | `null` | no |
+| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | The ID of the security group to which this ingress rule will be attached. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to assign to the ingress rule. | `map(string)` | `{}` | no |
+| <a name="input_to_port"></a> [to\_port](#input\_to\_port) | The end of port range for the TCP and UDP protocols, or an ICMP code. Required for tcp and udp protocols. Use -1 for ICMP code. | `number` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | The Terraform resource ID of the security group ingress rule. |
-| <a name="output_security_group_rule_id"></a> [security\_group\_rule\_id](#output\_security\_group\_rule\_id) | The AWS-assigned unique identifier for the security group rule. |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group to which this ingress rule is attached. |
-| <a name="output_ingress_rule_effective_source"></a> [ingress\_rule\_effective\_source](#output\_ingress\_rule\_effective\_source) | A canonical string describing the effective source for this ingress rule (CIDR, prefix list, or security group). |
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the security group rule. |
+| <a name="output_id"></a> [id](#output\_id) | The Terraform resource ID of the security group ingress rule. |
+| <a name="output_ingress_rule_effective_source"></a> [ingress\_rule\_effective\_source](#output\_ingress\_rule\_effective\_source) | A canonical string describing the effective source for this ingress rule (CIDR, prefix list, or security group). |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group to which this ingress rule is attached. |
+| <a name="output_security_group_rule_id"></a> [security\_group\_rule\_id](#output\_security\_group\_rule\_id) | The AWS-assigned unique identifier for the security group rule. |
 | <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all) | A map of tags assigned to the resource, including those inherited from the provider default\_tags. |
 <!-- END_TF_DOCS -->
