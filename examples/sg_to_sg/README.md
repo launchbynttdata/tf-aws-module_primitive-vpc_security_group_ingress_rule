@@ -39,18 +39,12 @@ This example simulates a multi-tier application:
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.100 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
-
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ingress_postgres_sg"></a> [ingress\_postgres\_sg](#module\_ingress\_postgres\_sg) | ../../ | n/a |
 | <a name="module_ingress_mysql_sg"></a> [ingress\_mysql\_sg](#module\_ingress\_mysql\_sg) | ../../ | n/a |
+| <a name="module_ingress_postgres_sg"></a> [ingress\_postgres\_sg](#module\_ingress\_postgres\_sg) | ../../ | n/a |
 
 ## Resources
 
@@ -72,10 +66,10 @@ This example simulates a multi-tier application:
 
 | Name | Description |
 |------|-------------|
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the target security group |
-| <a name="output_ingress_rule_id"></a> [ingress\_rule\_id](#output\_ingress\_rule\_id) | ID of the PostgreSQL ingress rule |
-| <a name="output_ingress_rule_arn"></a> [ingress\_rule\_arn](#output\_ingress\_rule\_arn) | ARN of the PostgreSQL ingress rule |
 | <a name="output_effective_source"></a> [effective\_source](#output\_effective\_source) | Effective source for PostgreSQL ingress rule |
-| <a name="output_source_security_group_id"></a> [source\_security\_group\_id](#output\_source\_security\_group\_id) | ID of the source security group |
+| <a name="output_ingress_rule_arn"></a> [ingress\_rule\_arn](#output\_ingress\_rule\_arn) | ARN of the PostgreSQL ingress rule |
+| <a name="output_ingress_rule_id"></a> [ingress\_rule\_id](#output\_ingress\_rule\_id) | ID of the PostgreSQL ingress rule |
 | <a name="output_mysql_ingress_rule_id"></a> [mysql\_ingress\_rule\_id](#output\_mysql\_ingress\_rule\_id) | ID of the MySQL ingress rule |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the target security group |
+| <a name="output_source_security_group_id"></a> [source\_security\_group\_id](#output\_source\_security\_group\_id) | ID of the source security group |
 <!-- END_TF_DOCS -->
