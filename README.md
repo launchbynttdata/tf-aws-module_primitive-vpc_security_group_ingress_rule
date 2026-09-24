@@ -93,7 +93,7 @@ The `examples/` directory contains several working examples:
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 1.0 |
+| terraform | >= 1.5.0, < 2.0.0 |
 | aws | ~> 5.100 |
 
 ## Providers
@@ -166,7 +166,7 @@ See [IANA Protocol Numbers](https://www.iana.org/assignments/protocol-numbers/pr
 
 ### Prerequisites
 
-- [Terraform](https://www.terraform.io/downloads.html) ~> 1.0
+- [Terraform](https://www.terraform.io/downloads.html) >= 1.5.0, < 2.0.0
 - [Go](https://golang.org/doc/install) ~> 1.24 (for testing)
 - [pre-commit](https://pre-commit.com/) (installed via framework)
 - AWS credentials configured
@@ -221,7 +221,7 @@ Maintained by [Launch by NTT DATA](https://github.com/launchbynttdata).
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0, < 2.0.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.100 |
 
 ## Modules
