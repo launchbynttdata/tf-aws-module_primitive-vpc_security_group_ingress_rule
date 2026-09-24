@@ -25,7 +25,9 @@ const (
 	infraTFVarFileNameDefault        = "test.tfvars"
 )
 
-func TestSecurityGroupIngressRuleModule(t *testing.T) {
+// TestSecurityGroupIngressRuleModuleReadOnly validates deployed infrastructure
+// without creating, mutating, or destroying Terraform-managed resources.
+func TestSecurityGroupIngressRuleModuleReadOnly(t *testing.T) {
 
 	ctx := types.CreateTestContextBuilder().
 		SetTestConfig(&testimpl.ThisTFModuleConfig{}).
