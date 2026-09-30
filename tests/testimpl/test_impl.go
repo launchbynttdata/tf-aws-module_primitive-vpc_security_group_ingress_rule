@@ -20,7 +20,33 @@ const (
 	failedToFindIngressRuleMsg  = "Failed to find ingress rule"
 )
 
+// TestComposableComplete is the functional test implementation. It is run
+// as part of the setup/apply/teardown lifecycle and verifies the deployed
+// ingress rule via the EC2 API.
 func TestComposableComplete(t *testing.T, ctx testTypes.TestContext) {
+	ec2Client := GetAWSEC2Client(t)
+
+	ingressRuleId := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "ingress_rule_id")
+	securityGroupId := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "security_group_id")
+	effectiveSource := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "effective_source")
+
+	t.Run("TestSecurityGroupIngressRuleExists", func(t *testing.T) {
+		testSecurityGroupIngressRuleExists(t, ec2Client, securityGroupId, ingressRuleId)
+	})
+
+	t.Run("TestSecurityGroupIngressRuleProperties", func(t *testing.T) {
+		testSecurityGroupIngressRuleProperties(t, ec2Client, securityGroupId, ingressRuleId)
+	})
+
+	t.Run("TestEffectiveSource", func(t *testing.T) {
+		testEffectiveSource(t, effectiveSource)
+	})
+}
+
+// TestComposableCompleteReadOnly is the readonly test implementation. It
+// performs the same read-only verification as TestComposableComplete via
+// the EC2 API and must not create, update, or delete any resources.
+func TestComposableCompleteReadOnly(t *testing.T, ctx testTypes.TestContext) {
 	ec2Client := GetAWSEC2Client(t)
 
 	ingressRuleId := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "ingress_rule_id")
